@@ -1,8 +1,8 @@
 ﻿namespace kmp_api
 {
-    public class Listings
+    public class Listing
     {
-        public Listings(Guid id, Guid carId, decimal price)
+        public Listing(Guid id, Guid carId, decimal price)
         {
             Id = id;
             CarId = carId;

@@ -16,9 +16,15 @@ namespace kmp_api.Controllers
         }
 
         [HttpGet(Name = "GetListings")]
-        public IEnumerable<Listings> Get()
+        public IEnumerable<Listing> Get()
         {
             return ListingsDatabase.GetListings();
+        }
+
+        [HttpPost(Name = "AddListing")]
+        public bool Post(decimal price, Guid carId)
+        {
+            return ListingsDatabase.AddListing(price, carId);
         }
     }
 }
