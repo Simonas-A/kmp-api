@@ -28,7 +28,7 @@ namespace kmp_api.Controllers
         //}
 
         [HttpPost(Name = "AddCar")]
-        public bool Post(int year, int mileage, string brand, string model)
+        public Guid Post(int year, int mileage, string brand, string model)
         {
             return ListingsDatabase.AddCar(year, mileage, brand, model);
         }

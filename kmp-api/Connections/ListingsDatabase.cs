@@ -14,11 +14,7 @@ namespace kmp_api.Connections
             
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "";
-                builder.UserID = "";
-                builder.Password = "";
-                builder.InitialCatalog = "";
+                var builder = ConnectionBuilder.BuildConnection();
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
@@ -67,11 +63,8 @@ namespace kmp_api.Connections
 
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "";
-                builder.UserID = "";
-                builder.Password = "";
-                builder.InitialCatalog = "";
+                var builder = ConnectionBuilder.BuildConnection();
+
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
@@ -107,23 +100,22 @@ namespace kmp_api.Connections
             return listings;
         }
 
-        public static bool AddListing (decimal price, Guid carId)
+        public static Guid AddListing (decimal price, Guid carId)
         {
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "";
-                builder.UserID = "";
-                builder.Password = "";
-                builder.InitialCatalog = "";
+                var builder = ConnectionBuilder.BuildConnection();
+
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = String.Format("INSERT INTO Listings (id, carId, price) VALUES (NEWID(), '{0}', {1})",
-                        carId, price);
+                    Guid id = Guid.NewGuid();
+
+                    String sql = String.Format("INSERT INTO Listings (id, carId, price) VALUES ('{0}', '{1}', {2})",
+                        id, carId, price);
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -131,7 +123,9 @@ namespace kmp_api.Connections
                         int q = command.ExecuteNonQuery();
 
                         if (q != 1)
-                            return false;
+                            return Guid.Empty;
+
+                        return id;
 
                     }
 
@@ -140,28 +134,25 @@ namespace kmp_api.Connections
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
-                return false;
+                return Guid.Empty;
             }
-            return true;
         }
 
-        public static bool AddCar(int year, int mileage, string brand, string model)
+        public static Guid AddCar(int year, int mileage, string brand, string model)
         {
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "";
-                builder.UserID = "";
-                builder.Password = "";
-                builder.InitialCatalog = "";
+                var builder = ConnectionBuilder.BuildConnection();
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model) VALUES (NEWID(), {0}, {1}, '{2}', '{3}')",
-                        year, mileage, brand, model);
+                    Guid id = Guid.NewGuid();
+
+                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
+                        id, year, mileage, brand, model);
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -169,7 +160,9 @@ namespace kmp_api.Connections
                         int q = command.ExecuteNonQuery();
 
                         if (q != 1)
-                            return false;
+                            return Guid.Empty;
+
+                        return id;
 
                     }
 
@@ -178,11 +171,11 @@ namespace kmp_api.Connections
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
-                return false;
+                return Guid.Empty;
             }
-            return true;
         }
 
+        
         public static IEnumerable<Car> GetCars()
         {
             List<Car> cars = new List<Car>();
@@ -191,11 +184,8 @@ namespace kmp_api.Connections
 
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "";
-                builder.UserID = "";
-                builder.Password = "";
-                builder.InitialCatalog = "";
+                var builder = ConnectionBuilder.BuildConnection();
+
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {

@@ -22,7 +22,7 @@ namespace kmp_api.Controllers
         }
 
         [HttpPost(Name = "AddListing")]
-        public bool Post(decimal price, Guid carId)
+        public Guid Post(decimal price, Guid carId)
         {
             return ListingsDatabase.AddListing(price, carId);
         }
