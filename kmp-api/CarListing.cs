@@ -2,17 +2,23 @@
 {
     public class CarListing
     {
-        public CarListing(string brand, string model, int year, decimal price)
+        public CarListing(Guid id, Guid carId, string brand, string model, int year, int mileage, decimal price)
         {
+            Id = id;
+            CarId = carId;
             Brand = brand;
             Model = model;
             Year = year;
+            Mileage = mileage;
             Price = price;
         }
 
-        string Brand { get; set; }
-        string Model { get; set; }
-        int Year { get; set; }
-        decimal Price { get; set; }
+        public Guid Id { get; set; }
+        public Guid CarId { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
+        public int Mileage { get; set; }
+        public decimal Price { get; set; }
     }
 }

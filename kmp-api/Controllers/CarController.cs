@@ -8,29 +8,29 @@ namespace kmp_api.Controllers
     [Route("[controller]")]
     public class CarController : ControllerBase
     {
-        private readonly ILogger<CarListingsController> _logger;
+        private readonly ILogger<ListingController> _logger;
 
-        public CarController(ILogger<CarListingsController> logger)
+        public CarController(ILogger<ListingController> logger)
         {
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetCars")]
+        [HttpGet("GetCars")]
         public IEnumerable<Car> Get()
         {
-            return ListingsDatabase.GetCars();
+            return DatabaseConnect.GetCars();
         }
 
-        //[HttpGet(Name = "GetCarListings")]
-        //public IEnumerable<CarListing> GetCarListings()
-        //{
-        //    return ListingsDatabase.GetCarListings();
-        //}
+        [HttpGet("GetCar/{id}")]
+        public Car Get(Guid id)
+        {
+            return DatabaseConnect.GetCar(id);
+        }
 
-        [HttpPost(Name = "AddCar")]
+        [HttpPost("AddCar")]
         public Guid Post(int year, int mileage, string brand, string model)
         {
-            return ListingsDatabase.AddCar(year, mileage, brand, model);
+            return DatabaseConnect.AddCar(year, mileage, brand, model);
         }
     }
 }

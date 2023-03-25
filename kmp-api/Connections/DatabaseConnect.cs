@@ -4,14 +4,13 @@ using System.Data.Common;
 
 namespace kmp_api.Connections
 {
-    public static class ListingsDatabase
+    public static class DatabaseConnect
+        
     {
         public static IEnumerable<Listing> GetListings()
         {
             List<Listing> listings = new List<Listing>();
 
-            //var con = new SqlConnection(
-            
             try
             {
                 var builder = ConnectionBuilder.BuildConnection();
@@ -36,8 +35,6 @@ namespace kmp_api.Connections
                                     reader.GetGuid(1),
                                     reader.GetDecimal(2)
                                 ));
-                                //listings.Add()
-                                //Console.WriteLine("{0} {1} {2}", reader.GetString(0), reader.GetString(1), reader.GetString(2));
                             }
                         }
                     }
@@ -49,17 +46,11 @@ namespace kmp_api.Connections
                 Console.WriteLine(e.ToString());
             }
             return listings;
-            
-            //Console.ReadLine();
-            //var connection =
-            //return new Listings[] { };
         }
 
         public static IEnumerable<CarListing> GetCarListings()
         {
-
             List<CarListing> listings = new List<CarListing>();
-
 
             try
             {
@@ -71,7 +62,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = "SELECT c.brand, c.model, c.year, l.price FROM listings l LEFT JOIN cars c ON l.carId = c.id";
+                    String sql = "SELECT l.id, c.id, c.brand, c.model, c.year, c.mileage, l.price FROM listings l LEFT JOIN cars c ON l.carId = c.id";
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -82,10 +73,13 @@ namespace kmp_api.Connections
                             while (reader.Read())
                             {
                                 listings.Add(new CarListing(
-                                    reader.GetString(0),
-                                    reader.GetString(1),
-                                    reader.GetInt32(2),
-                                    reader.GetDecimal(3)
+                                    reader.GetGuid(0),
+                                    reader.GetGuid(1),
+                                    reader.GetString(2),
+                                    reader.GetString(3),
+                                    reader.GetInt32(4),
+                                    reader.GetInt32(5),
+                                    reader.GetDecimal(6)
                                 ));
                             }
                         }
@@ -175,7 +169,6 @@ namespace kmp_api.Connections
             }
         }
 
-        
         public static IEnumerable<Car> GetCars()
         {
             List<Car> cars = new List<Car>();
@@ -220,8 +213,133 @@ namespace kmp_api.Connections
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
+                return null;
             }
             return cars;
+        }
+
+        internal static Car GetCar(Guid id)
+        {
+            try
+            {
+                var builder = ConnectionBuilder.BuildConnection();
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = String.Format("SELECT id, brand, model, year, mileage FROM cars WHERE id = '{0}'", id.ToString());
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            reader.Read();
+                            Car car = new Car(
+                                reader.GetGuid(0),
+                                reader.GetString(1),
+                                reader.GetString(2),
+                                reader.GetInt32(3),
+                                reader.GetInt32(4)
+                            );
+
+                            return car;
+
+                        }
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return null;
+        }
+
+        internal static Listing GetListing(Guid id)
+        {
+            try
+            {
+                var builder = ConnectionBuilder.BuildConnection();
+
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = "SELECT l.id, l.carId, l.price FROM listings l WHERE l.id = '" + id.ToString() + "'";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            reader.Read();
+                            Listing listing = new Listing(
+                                reader.GetGuid(0),
+                                reader.GetGuid(1),
+                                reader.GetDecimal(2)
+                            );
+                            reader.Read();
+                            return listing;
+                        }
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return null;
+        }
+
+        internal static CarListing GetCarListing(Guid id)
+        {
+            try
+            {
+                var builder = ConnectionBuilder.BuildConnection();
+
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = "SELECT l.id, c.id, c.brand, c.model, c.year, c.mileage, l.price FROM listings l LEFT JOIN cars c ON l.carId = c.id AND l.id = '" + id.ToString() + "'";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            reader.Read();
+                            CarListing listing = new CarListing(
+                                reader.GetGuid(0),
+                                reader.GetGuid(1),
+                                reader.GetString(2),
+                                reader.GetString(3),
+                                reader.GetInt32(4),
+                                reader.GetInt32(5),
+                                reader.GetDecimal(6)
+                            );
+                            return listing;
+                        }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return null;
         }
     }
 }
