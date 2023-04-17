@@ -28,9 +28,9 @@ namespace kmp_api.Controllers
         }
 
         [HttpPost("AddCar")]
-        public Guid Post(int year, int mileage, string brand, string model)
+        public Guid Post(int year, int mileage, string brand, string model, decimal price, string owner, string phone)
         {
-            return DatabaseConnect.AddCar(year, mileage, brand, model);
+            return DatabaseConnect.AddCar(year, mileage, brand, model, price, owner, phone);
         }
     }
 }

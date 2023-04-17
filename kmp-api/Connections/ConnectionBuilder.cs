@@ -7,10 +7,10 @@ namespace kmp_api.Connections
         public static SqlConnectionStringBuilder BuildConnection()
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "";
-            builder.UserID = "";
-            builder.Password = "";
-            builder.InitialCatalog = "";
+            builder.DataSource = "mysqlserver9798.database.windows.net";
+            builder.UserID = "azureuser";
+            builder.Password = "mypassword123?";
+            builder.InitialCatalog = "mySampleDatabase";
             return builder;
         }
     }

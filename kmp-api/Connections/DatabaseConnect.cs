@@ -132,7 +132,7 @@ namespace kmp_api.Connections
             }
         }
 
-        public static Guid AddCar(int year, int mileage, string brand, string model)
+        public static Guid AddCar(int year, int mileage, string brand, string model, decimal price, string owner, string phone)
         {
             try
             {
@@ -145,8 +145,8 @@ namespace kmp_api.Connections
 
                     Guid id = Guid.NewGuid();
 
-                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
-                        id, year, mileage, brand, model);
+                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}')",
+                        id, year, mileage, brand, model, price, owner, phone);
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -185,7 +185,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = "SELECT id, brand, model, year, mileage FROM cars";
+                    String sql = "SELECT id, brand, model, year, mileage, price, owner, phone FROM cars";
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -193,19 +193,20 @@ namespace kmp_api.Connections
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            while (reader.Read())
-                            {
-                                cars.Add(new Car(
-                                    reader.GetGuid(0),
-                                    reader.GetString(1),
-                                    reader.GetString(2),
-                                    reader.GetInt32(3),
-                                    reader.GetInt32(4)
-                                ));
-                                //listings.Add()
-                                //Console.WriteLine("{0} {1} {2}", reader.GetString(0), reader.GetString(1), reader.GetString(2));
-                            }
-                        }
+							while (reader.Read())
+							{
+								Guid id = reader.GetGuid(0);
+								string brand = reader.GetString(1);
+								string model = reader.GetString(2);
+								int year = reader.GetInt32(3);
+								int mileage = reader.GetInt32(4);
+								decimal price = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5);
+								string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
+								string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
+
+								cars.Add(new Car(id, brand, model, year, mileage, price, owner, phone));
+							}
+						}
                     }
 
                 }
@@ -229,7 +230,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = String.Format("SELECT id, brand, model, year, mileage FROM cars WHERE id = '{0}'", id.ToString());
+                    String sql = String.Format("SELECT id, brand, model, year, mileage, price, owner, phone FROM cars WHERE id = '{0}'", id.ToString());
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -238,13 +239,16 @@ namespace kmp_api.Connections
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             reader.Read();
-                            Car car = new Car(
-                                reader.GetGuid(0),
-                                reader.GetString(1),
-                                reader.GetString(2),
-                                reader.GetInt32(3),
-                                reader.GetInt32(4)
-                            );
+							Guid guid = reader.GetGuid(0);
+							string brand = reader.GetString(1);
+							string model = reader.GetString(2);
+							int year = reader.GetInt32(3);
+							int mileage = reader.GetInt32(4);
+							decimal price = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5);
+							string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
+							string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
+
+							Car car = new Car(guid, brand, model, year, mileage, price, owner, phone);
 
                             return car;
 
