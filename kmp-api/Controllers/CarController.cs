@@ -32,5 +32,17 @@ namespace kmp_api.Controllers
         {
             return DatabaseConnect.AddCar(year, mileage, brand, model, price, owner, phone);
         }
+
+        [HttpPut("UpdateCar")]
+        public void Put(Guid id, int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        {
+            DatabaseConnect.UpdateCar(id, year, mileage, brand, model, price, owner, phone);
+        }
+
+        [HttpDelete("DeleteCar/{id}")]
+        public void Delete(Guid id)
+        {
+            DatabaseConnect.DeleteCar(id);
+        }
     }
 }

@@ -345,5 +345,61 @@ namespace kmp_api.Connections
             }
             return null;
         }
+
+        internal static void UpdateCar(Guid id, int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        {
+            try
+            {
+                var builder = ConnectionBuilder.BuildConnection();
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = String.Format("UPDATE cars SET brand = '{0}', model = '{1}', year = {2}, mileage = {3}, price = {4}, owner = '{5}', phone = '{6}' WHERE id = '{7}'", brand, model, year, mileage, price, owner, phone, id.ToString());
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        internal static void DeleteCar(Guid id)
+        {
+            try
+            {
+                var builder = ConnectionBuilder.BuildConnection();
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = String.Format("DELETE FROM cars WHERE id = '{0}'", id.ToString());
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
     }
 }
