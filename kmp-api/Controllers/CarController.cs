@@ -9,10 +9,12 @@ namespace kmp_api.Controllers
     public class CarController : ControllerBase
     {
         private readonly ILogger<ListingController> _logger;
+        private readonly ImageService _imageService;
 
-        public CarController(ILogger<ListingController> logger)
+        public CarController(ILogger<ListingController> logger, ImageService imageService)
         {
             _logger = logger;
+            _imageService = imageService;
         }
 
         [HttpGet("GetCars")]
@@ -43,6 +45,12 @@ namespace kmp_api.Controllers
         public void Delete(Guid id)
         {
             DatabaseConnect.DeleteCar(id);
+        }
+
+        [HttpPost]
+        public async Task<string> Post([FromBody] string image) {
+            string url = await _imageService.UploadImage(image);
+            return url;
         }
     }
 }
