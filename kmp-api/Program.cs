@@ -1,3 +1,5 @@
+using kmp_api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -36,6 +38,7 @@ builder.Services.AddCors(options =>
     //    );
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
