@@ -30,10 +30,30 @@ namespace kmp_api.Controllers
         }
 
         [HttpPost("AddCar")]
-        public Guid Post(int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        public async Task<Guid> Post(Car listing)
         {
-            return DatabaseConnect.AddCar(year, mileage, brand, model, price, owner, phone);
-        }
+			//return Guid.NewGuid();
+			Guid carId = DatabaseConnect.AddCar(listing);
+
+			ImageService imageService = new ImageService();
+
+			foreach (var image in listing.Images)
+			{
+				string imageUrl = await imageService.UploadImage(image);
+				DatabaseConnect.AddImage(imageUrl, carId);
+			}
+
+			return carId;
+
+			//ImageService.UploadImage(listing.Image, carId);
+			//return DatabaseConnect.AddCar(listing);
+		}
+
+        //[HttpPost("AddCar")]
+        //public Guid Post(int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        //{
+        //    return DatabaseConnect.AddCar(year, mileage, brand, model, price, owner, phone);
+        //}
 
         [HttpPut("UpdateCar")]
         public void Put(Guid id, int year, int mileage, string brand, string model, decimal price, string owner, string phone)

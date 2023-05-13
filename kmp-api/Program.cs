@@ -1,4 +1,5 @@
 using kmp_api;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("http://localhost:3000");
                           policy.WithMethods("GET", "POST", "PUT", "DELETE");
-                      });
+						  policy.AllowAnyHeader();
+					  });
 });
 
 builder.Services.AddControllers();

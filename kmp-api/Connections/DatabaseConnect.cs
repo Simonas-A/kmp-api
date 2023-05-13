@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.Data.Common;
+using System.Reflection;
 
 namespace kmp_api.Connections
 {
@@ -169,7 +170,44 @@ namespace kmp_api.Connections
             }
         }
 
-        public static IEnumerable<Car> GetCars()
+		public static Guid AddCar(Car listing)
+		{
+			try
+			{
+				var builder = ConnectionBuilder.BuildConnection();
+
+				using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+				{
+					Console.WriteLine("\nQuery data example:");
+					Console.WriteLine("=========================================\n");
+
+					Guid id = Guid.NewGuid();
+
+					String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}')",
+						id, listing.Year, listing.Mileage, listing.Brand, listing.Model, listing.Price, listing.Owner, listing.PhoneNumber);
+
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						connection.Open();
+						int q = command.ExecuteNonQuery();
+
+						if (q != 1)
+							return Guid.Empty;
+
+						return id;
+
+					}
+
+				}
+			}
+			catch (SqlException e)
+			{
+				Console.WriteLine(e.ToString());
+				return Guid.Empty;
+			}
+		}
+
+		public static IEnumerable<Car> GetCars()
         {
             List<Car> cars = new List<Car>();
 
@@ -185,9 +223,11 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = "SELECT id, brand, model, year, mileage, price, owner, phone FROM cars";
+                    //String sql = "SELECT id, brand, model, year, mileage, price, owner, phone FROM cars";
+                    String sql = "SELECT c.id, c.brand, c.model, c.year, c.mileage, c.price, c.owner, c.phone, i.link FROM cars c\r\nLEFT JOIN images i ON i.carId = c.id";
 
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+
+					using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         connection.Open();
 
@@ -203,8 +243,10 @@ namespace kmp_api.Connections
 								decimal price = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5);
 								string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
 								string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
+                                string image = reader.IsDBNull(8) ? "" : reader.GetString(8);
 
-								cars.Add(new Car(id, brand, model, year, mileage, price, owner, phone));
+                                if (cars.Count(q => q.Id == id) == 0)
+								    cars.Add(new Car(id, brand, model, year, mileage, price, owner, phone, new string[] { image }));
 							}
 						}
                     }
@@ -248,7 +290,7 @@ namespace kmp_api.Connections
 							string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
 							string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
 
-							Car car = new Car(guid, brand, model, year, mileage, price, owner, phone);
+							Car car = new Car(guid, brand, model, year, mileage, price, owner, phone, new string[] { });
 
                             return car;
 
@@ -401,5 +443,37 @@ namespace kmp_api.Connections
                 Console.WriteLine(e.ToString());
             }
         }
-    }
+
+		internal static Guid AddImage(string imageUrl, Guid carId)
+		{
+			try
+			{
+				var builder = ConnectionBuilder.BuildConnection();
+
+				using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+				{
+					Console.WriteLine("\nQuery data example:");
+					Console.WriteLine("=========================================\n");
+
+					Guid id = Guid.NewGuid();
+
+					String sql = String.Format("INSERT INTO Images (id, carId, link) VALUES ('{0}', '{1}', '{2}')",
+                    id, carId, imageUrl);
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        connection.Open();
+                        int q = command.ExecuteNonQuery();
+                        if (q != 1)
+                            return Guid.Empty;
+                        return id;
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+                return Guid.Empty;
+            }
+        }
+	}
 }
