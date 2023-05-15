@@ -388,7 +388,7 @@ namespace kmp_api.Connections
             return null;
         }
 
-        internal static void UpdateCar(Guid id, int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        internal static void UpdateCar(Guid id, Car updateArgs)
         {
             try
             {
@@ -399,7 +399,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = String.Format("UPDATE cars SET brand = '{0}', model = '{1}', year = {2}, mileage = {3}, price = {4}, owner = '{5}', phone = '{6}' WHERE id = '{7}'", brand, model, year, mileage, price, owner, phone, id.ToString());
+                    String sql = String.Format("UPDATE cars SET brand = '{0}', model = '{1}', year = {2}, mileage = {3}, price = {4}, owner = '{5}', phone = '{6}' WHERE id = '{7}'", updateArgs.Brand, updateArgs.Model, updateArgs.Year, updateArgs.Mileage, updateArgs.Price, updateArgs.Owner, updateArgs.PhoneNumber, id.ToString());
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
