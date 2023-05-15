@@ -10,16 +10,18 @@ namespace kmp_api.Controllers
             return View();
         }
 
+        private readonly DatabaseConnect _databaseConnect;
+
         [HttpGet("GetCarListings")]
         public IEnumerable<CarListing> GetCarListings()
         {
-            return DatabaseConnect.GetCarListings();
+            return _databaseConnect.GetCarListings();
         }
 
         [HttpGet("GetCarListing/{id}")]
         public CarListing GetCarListing(Guid id)
         {
-            return DatabaseConnect.GetCarListing(id);
+            return _databaseConnect.GetCarListing(id);
         }
     }
 }

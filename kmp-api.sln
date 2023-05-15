@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kmp-api", "kmp-api\kmp-api.csproj", "{6E42BF0B-F7B8-4621-8FA0-E45BEC91F82B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kmp-api-test", "kmp-api-test\kmp-api-test.csproj", "{165BDA86-FE10-45B0-AE94-740022DBE703}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6E42BF0B-F7B8-4621-8FA0-E45BEC91F82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E42BF0B-F7B8-4621-8FA0-E45BEC91F82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E42BF0B-F7B8-4621-8FA0-E45BEC91F82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{165BDA86-FE10-45B0-AE94-740022DBE703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{165BDA86-FE10-45B0-AE94-740022DBE703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{165BDA86-FE10-45B0-AE94-740022DBE703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{165BDA86-FE10-45B0-AE94-740022DBE703}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

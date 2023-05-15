@@ -10,37 +10,39 @@ namespace kmp_api.Controllers
     {
         private readonly ILogger<ListingController> _logger;
         private readonly ImageService _imageService;
+        private readonly DatabaseConnect _databaseConnect;
 
         public CarController(ILogger<ListingController> logger, ImageService imageService)
         {
             _logger = logger;
             _imageService = imageService;
+            _databaseConnect = new DatabaseConnect();
         }
 
         [HttpGet("GetCars")]
         public IEnumerable<Car> Get()
         {
-            return DatabaseConnect.GetCars();
+            return _databaseConnect.GetCars();
         }
 
         [HttpGet("GetCar/{id}")]
         public Car Get(Guid id)
         {
-            return DatabaseConnect.GetCar(id);
+            return _databaseConnect.GetCar(id);
         }
 
         [HttpPost("AddCar")]
         public async Task<Guid> Post(Car listing)
         {
 			//return Guid.NewGuid();
-			Guid carId = DatabaseConnect.AddCar(listing);
+			Guid carId = _databaseConnect.AddCar(listing);
 
 			ImageService imageService = new ImageService();
 
 			foreach (var image in listing.Images)
 			{
 				string imageUrl = await imageService.UploadImage(image);
-				DatabaseConnect.AddImage(imageUrl, carId);
+                _databaseConnect.AddImage(imageUrl, carId);
 			}
 
 			return carId;
@@ -58,13 +60,13 @@ namespace kmp_api.Controllers
         [HttpPut("UpdateCar/{id}")]
         public void Put(Guid id, [FromBody] Car car)
         {
-            DatabaseConnect.UpdateCar(id, car);
+            _databaseConnect.UpdateCar(id, car);
         }
 
         [HttpDelete("DeleteCar/{id}")]
         public void Delete(Guid id)
         {
-            DatabaseConnect.DeleteCar(id);
+            _databaseConnect.DeleteCar(id);
         }
 
         [HttpPost]
