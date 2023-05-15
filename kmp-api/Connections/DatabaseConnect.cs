@@ -133,7 +133,7 @@ namespace kmp_api.Connections
             }
         }
 
-        public static Guid AddCar(int year, int mileage, string brand, string model, decimal price, string owner, string phone)
+        public static Guid AddCar(int year, int mileage, string brand, string model, decimal price, string owner,string ownerId, string phone)
         {
             try
             {
@@ -146,8 +146,8 @@ namespace kmp_api.Connections
 
                     Guid id = Guid.NewGuid();
 
-                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}')",
-                        id, year, mileage, brand, model, price, owner, phone);
+                    String sql = String.Format("INSERT INTO Cars ("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone, OwnerId) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')",
+                        id, year, mileage, brand, model, price, owner, phone,ownerId);
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -183,8 +183,8 @@ namespace kmp_api.Connections
 
 					Guid id = Guid.NewGuid();
 
-					String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}')",
-						id, listing.Year, listing.Mileage, listing.Brand, listing.Model, listing.Price, listing.Owner, listing.PhoneNumber);
+					String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner,userId, phone) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')",
+						id, listing.Year, listing.Mileage, listing.Brand, listing.Model, listing.Price, listing.Owner,listing.UserId, listing.PhoneNumber);
 
 					using (SqlCommand command = new SqlCommand(sql, connection))
 					{
@@ -224,7 +224,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("=========================================\n");
 
                     //String sql = "SELECT id, brand, model, year, mileage, price, owner, phone FROM cars";
-                    String sql = "SELECT c.id, c.brand, c.model, c.year, c.mileage, c.price, c.owner, c.phone, i.link FROM cars c\r\nLEFT JOIN images i ON i.carId = c.id";
+                    String sql = "SELECT c.id, c.brand, c.model, c.year, c.mileage, c.price, c.owner,c.userId, c.phone, i.link FROM cars c\r\nLEFT JOIN images i ON i.carId = c.id";
 
 
 					using (SqlCommand command = new SqlCommand(sql, connection))
@@ -243,10 +243,11 @@ namespace kmp_api.Connections
 								decimal price = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5);
 								string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
 								string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
-                                string image = reader.IsDBNull(8) ? "" : reader.GetString(8);
+                                				string userId = reader.IsDBNull(8) ? "" : reader.GetString(8);
+								string image = reader.IsDBNull(9) ? "" : reader.GetString(9);
 
                                 if (cars.Count(q => q.Id == id) == 0)
-								    cars.Add(new Car(id, brand, model, year, mileage, price, owner, phone, new string[] { image }));
+								    cars.Add(new Car(id, brand, model, year, mileage, price, owner, phone,userId, new string[] { image }));
 							}
 						}
                     }
@@ -272,8 +273,7 @@ namespace kmp_api.Connections
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n");
 
-                    String sql = String.Format("SELECT id, brand, model, year, mileage, price, owner, phone FROM cars WHERE id = '{0}'", id.ToString());
-
+                    String sql = String.Format("SELECT id, brand, model, year, mileage, price, owner, phone, userId FROM cars WHERE id = '{0}'", id.ToString());
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         connection.Open();
@@ -289,8 +289,9 @@ namespace kmp_api.Connections
 							decimal price = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5);
 							string owner = reader.IsDBNull(6) ? "" : reader.GetString(6);
 							string phone = reader.IsDBNull(7) ? "" : reader.GetString(7);
+							string userid = reader.IsDBNull(8) ? "" : reader.GetString(8);
 
-							Car car = new Car(guid, brand, model, year, mileage, price, owner, phone, new string[] { });
+							Car car = new Car(guid, brand, model, year, mileage, price, owner, phone,userid, new string[] { });
 
                             return car;
 
