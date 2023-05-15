@@ -4,7 +4,7 @@ namespace kmp_api
 {
     public class Car
     {
-        public Car(Guid id, string brand, string model, int year, int mileage, decimal price, string owner, string phoneNumber, string[] images)
+        public Car(Guid id, string brand, string model, int year, int mileage, decimal price, string owner,string ownerId, string phoneNumber, string[] images)
         {
             Id = id;
             Brand = brand;
@@ -13,6 +13,7 @@ namespace kmp_api
             Mileage = mileage;
             Price = price;
             Owner = owner;
+	    UserId = ownerId;
             PhoneNumber = phoneNumber;
             Images = images;
         }
@@ -26,6 +27,7 @@ namespace kmp_api
 			Mileage = car.Mileage;
 			Price = car.Price;
 			Owner = car.Owner;
+			UserId = car.UserId;
 			PhoneNumber = car.PhoneNumber;
 			Images = car.Images;
 		}
@@ -40,17 +42,19 @@ namespace kmp_api
 			Mileage = 10;
 			Price = 102;
 			Owner = "";
+			UserId = "";
 			PhoneNumber = "";
 			Images = new string[]{ };
 		}
 		
-		public Guid? Id { get; set; }
+	public Guid? Id { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
         public int Mileage { get; set; }
         public decimal Price { get; set; }
         public string Owner { get; set; }
+	public string UserId { get; set; }
         public string PhoneNumber { get; set; }
         public string[] Images { get; set; }
 
