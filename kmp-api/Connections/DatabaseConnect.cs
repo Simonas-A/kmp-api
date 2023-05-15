@@ -146,8 +146,8 @@ namespace kmp_api.Connections
 
                     Guid id = Guid.NewGuid();
 
-                    String sql = String.Format("INSERT INTO Cars ("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone, OwnerId) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')",
-                        id, year, mileage, brand, model, price, owner, phone,ownerId);
+                    String sql = String.Format("INSERT INTO Cars (id, year, mileage, brand, model, price, owner, phone, OwnerId) VALUES ('{0}', {1}, {2}, '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')",
+                        id, year, mileage, brand, model, price, owner, phone, ownerId);
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
